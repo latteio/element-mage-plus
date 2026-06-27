@@ -1,0 +1,32 @@
+/**
+ * 滚动条样式: 滑块 fixed
+ */
+.scrollable {
+  -webkit-overflow-scrolling: touch;
+}
+
+::-webkit-scrollbar-thumb,
+.el-scrollbar__thumb {
+  border-radius: 5px;
+  background-color: #8b8b8b !important;
+  transition: background-color 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover,
+.el-scrollbar__thumb:hover,
+.el-scrollbar__thumb:active {
+  background-color: #636363 !important;
+}
+
+/**
+ * 滚动条样式: 轨道 fixed
+ */
+::-webkit-scrollbar,
+.el-scrollbar__bar.is-horizontal {
+  height: 10px !important;
+}
+
+::-webkit-scrollbar,
+.el-scrollbar__bar.is-vertical {
+  width: 10px !important;
+}
