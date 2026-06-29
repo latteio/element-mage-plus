@@ -14,7 +14,7 @@ export default defineConfig(({mode}) => {
       vueJsx(),
       globalComponents({
         mode: mode,
-        libraryName: '@element-mage-plus/components',
+        libraryName: '@element-mage-plus/icons',
         output: 'src/components.d.ts',
         prefix: 'Mag'
       }),
@@ -51,7 +51,7 @@ export default defineConfig(({mode}) => {
       outDir: 'dist',
       lib: {
         entry: path.resolve(__dirname, 'src/index.ts'),
-        name: 'ElementMagePlusComponents',
+        name: 'ElementMagePlusIcons',
         formats: ['es', 'umd'],
         fileName: (format) => `dist/index.${format}.js`,
         cssFileName: 'index'
@@ -73,7 +73,7 @@ export default defineConfig(({mode}) => {
     /* 服务代理 */
     server: {
       host: '0.0.0.0',
-      port: 8000,
+      port: 8001,
       cors: true,
       hmr: true,
       proxy: {
