@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+
+    /* Basic Options */
+    "target": "esnext",
+    "module": "esnext",
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost",
+      "decorators",
+      "es5",
+      "es2015.promise"
+    ],
+    "jsx": "preserve",
+    "isolatedModules": true,
+    "composite": true,
+    /* Strict Type-Checking Options */
+    "strict": true,
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "types": [
+      "node"
+    ],
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    /* Experimental Options */
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "src/**/*.vue",
+    "cypress.config.*",
+    "nightwatch.conf.*",
+    "playwright.config.*",
+    "vite.config.*",
+    "vitest.config.*",
+    "src/configs/appConfig.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/**/__tests__/*"
+  ]
+}

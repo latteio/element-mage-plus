@@ -15,7 +15,6 @@
     "allowSyntheticDefaultImports": true,
     "declaration": true,
     "declarationMap": true,
-    "declarationDir": "dist/types",
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -34,8 +33,8 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@element-mage-plus/components/*": [
-        "packages/components/src/*"
+      "@/*": [
+        "./src/*"
       ]
     }
   },
