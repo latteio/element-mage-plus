@@ -15,8 +15,8 @@ const MagSelectTree = defineComponent({
     dataLoader: {type: Function as PropType<(params: any) => Promise<AxiosResponse<any>>>, required: false, default: () => null},
     dataParams: {type: Object, required: false, default: () => null},
     autoLoad: {type: Boolean, required: false, default: () => true},
-    dataPropKey: {type: String, required: false, default: () => null},
-    checkedDataPropKey: {type: String, required: false, default: () => null}
+    dataKey: {type: String, required: false, default: () => null},
+    checkedDataKey: {type: String, required: false, default: () => null}
   },
   setup(props, {attrs, expose}) {
     const loadingStatus = ref(false);
@@ -26,9 +26,9 @@ const MagSelectTree = defineComponent({
      */
     const selectTreeModel = reactive({
       /* 初始化数据 */
-      selectTreeOptionsData: (props.dataPropKey && props.checkedDataPropKey) ? (props.data as any)[props.dataPropKey as string] : (Objects.isArray(props.data) ? props.data : [props.data]),
+      selectTreeOptionsData: (props.dataKey && props.checkedDataKey) ? (props.data as any)[props.dataKey as string] : (Objects.isArray(props.data) ? props.data : [props.data]),
       /* 初始化勾选数据 */
-      selectTreeOptionsCheckedKeys: (props.dataPropKey && props.checkedDataPropKey) ? (props.data as any)[props.checkedDataPropKey as string] : [],
+      selectTreeOptionsCheckedKeys: (props.dataKey && props.checkedDataKey) ? (props.data as any)[props.checkedDataKey as string] : [],
       /* 获取数据的参数 */
       selectParams: {...props.dataParams}
     });
@@ -38,8 +38,8 @@ const MagSelectTree = defineComponent({
      * @param data
      */
     const loadDataFunc = (data: any) => {
-      selectTreeModel.selectTreeOptionsData = (props.dataPropKey && props.checkedDataPropKey) ? data[props.dataPropKey as string] : (Objects.isArray(data) ? data : [data]);
-      selectTreeModel.selectTreeOptionsCheckedKeys = (props.dataPropKey && props.checkedDataPropKey) ? data[props.checkedDataPropKey as string] : []
+      selectTreeModel.selectTreeOptionsData = (props.dataKey && props.checkedDataKey) ? data[props.dataKey as string] : (Objects.isArray(data) ? data : [data]);
+      selectTreeModel.selectTreeOptionsCheckedKeys = (props.dataKey && props.checkedDataKey) ? data[props.checkedDataKey as string] : []
     }
 
     /**
@@ -91,8 +91,8 @@ const MagSelectTree = defineComponent({
                              data={selectTreeModel.selectTreeOptionsData}
                              filterable
                              loading={loadingStatus.value}
-                             show-checkbox={props.checkedDataPropKey != null}
-                             default-checked-keys={props.checkedDataPropKey != null ? selectTreeModel.selectTreeOptionsCheckedKeys : []}>
+                             show-checkbox={props.checkedDataKey != null}
+                             default-checked-keys={props.checkedDataKey != null ? selectTreeModel.selectTreeOptionsCheckedKeys : []}>
         </ElTreeSelect>
       }
 
@@ -102,8 +102,8 @@ const MagSelectTree = defineComponent({
                       data={selectTreeModel.selectTreeOptionsData}
                       filterable
                       loading={loadingStatus.value}
-                      show-checkbox={props.checkedDataPropKey != null}
-                      default-checked-keys={props.checkedDataPropKey != null ? selectTreeModel.selectTreeOptionsCheckedKeys : []}>
+                      show-checkbox={props.checkedDataKey != null}
+                      default-checked-keys={props.checkedDataKey != null ? selectTreeModel.selectTreeOptionsCheckedKeys : []}>
         </ElTreeSelect>
       </MagFlexComponent>
     }

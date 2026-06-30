@@ -1,6 +1,5 @@
 import {defineComponent, h} from "vue";
 import MagButton from "@/components/basic/MagButton.vue";
-import MagLink from "@/components/basic/MagLink.vue";
 import {useSlots} from "@/composables/ComposableUseProvider.ts";
 
 const MagTreeBar = defineComponent({
@@ -22,7 +21,7 @@ const MagTreeBar = defineComponent({
               <span>{childBars.map((node: any) => {
                 let vNode;
 
-                if (node.type?.name === MagButton.name || node.type?.name === MagLink.name) {
+                if (node.type?.name === MagButton.name) {
                   let events: any = {};
                   if (node.props?.["onClick"]) {
                     events.onClick = (event: any) => {
@@ -36,12 +35,12 @@ const MagTreeBar = defineComponent({
                     }
                   }
 
-                  vNode = h(MagLink, {
+                  vNode = h(MagButton, {
                     style: 'margin-right: 5px',
                     ...node.props,
                     ...node.attrs,
                     formType: false,
-                    buttonType: false,
+                    asType: 'link',
                     size: "small",
                     dataScope: nodeDatas,
                     ...events

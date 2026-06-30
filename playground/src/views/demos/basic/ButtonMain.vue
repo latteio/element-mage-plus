@@ -3,14 +3,15 @@
     <!-- 按钮和按钮组 -->
     <mag-form region="center" :columns="1" ref="formRef">
       <mag-flex-component>
-        <mag-confirm-button type="primary" @click="submitForm" :icon="Refresh">提交</mag-confirm-button>
-        <mag-button type="primary" @click="resetForm">重置</mag-button>
+        <mag-button type="primary" @click="resetForm">保存
+        </mag-button>
+        <mag-button type="primary" @click="submitForm" :icon="Refresh">提交</mag-button>
       </mag-flex-component>
       <mag-button-group position="right">
-        <mag-button type="primary">首页</mag-button>
-        <mag-button type="primary">前页</mag-button>
-        <mag-button type="primary">后页</mag-button>
-        <mag-button type="primary">尾页</mag-button>
+        <mag-button type="primary" as-type="link" @click="() => alert('首页')">首页</mag-button>
+        <mag-button type="primary" as-type="link">前页</mag-button>
+        <mag-button type="primary" as-type="link">后页</mag-button>
+        <mag-button type="primary" as-type="link">尾页</mag-button>
       </mag-button-group>
       <mag-button-group :buttons="btnGroup1">
       </mag-button-group>
@@ -82,19 +83,14 @@ const btnGroup2 = [{
   }
 }];
 
-const submitForm = async () => {
-  await new Promise((resolve) => {
-    setTimeout(() => {
-      console.log('提交成功！');
-      resolve('提交成功的数据');
-    }, 5000);
-  });
+const alert = (text: string) => {
+  console.log('button text = ', text)
+}
+
+const submitForm = () => {
 }
 
 const resetForm = () => {
-  setTimeout(() => {
-  }, 3000);
-  console.log('2')
   formRef.value.resetForm();
 }
 

@@ -2,7 +2,7 @@ import {defineComponent, ref} from "vue";
 import {ElCollapseTransition, ElContainer, ElHeader, ElIcon, ElMain, ElTabs} from "element-plus";
 import {ArrowRight} from "@element-plus/icons-vue";
 import BasicViewComponent from "@/components/core/BasicViewComponent.ts";
-import {useSlots} from "@/composables/ComposableUseProvider.ts";
+import {useInvoke, useSlots} from "@/composables/ComposableUseProvider.ts";
 
 const MagTabGroup = defineComponent({
   extends: BasicViewComponent,
@@ -15,6 +15,7 @@ const MagTabGroup = defineComponent({
     stretch: {type: Boolean, required: false, default: () => false}
   },
   setup(props, {attrs, slots, expose}) {
+    const componentRef = ref();
     const componentVisible = ref(props.visible);
     const componentExpanded = ref(props.expanded);
     const currentTab = ref(props.active);
@@ -36,7 +37,10 @@ const MagTabGroup = defineComponent({
       setVisible: (visible: boolean) => {
         componentVisible.value = visible;
       },
-      setExpanded: setExpandedFunc
+      setExpanded: setExpandedFunc,
+      invoke: function (methodName: string, ...args: any[]) {
+        return useInvoke(componentRef, methodName, args);
+      }
     });
 
     /**
@@ -44,7 +48,7 @@ const MagTabGroup = defineComponent({
      */
     const createTabGroupHeader = () => {
       if (props.header) {
-        return <ElHeader onclick={setExpandedInternalFunc}
+        return <ElHeader onClick={setExpandedInternalFunc}
                          class={{
                            "mag-view__header": true,
                            "is-expanded": componentExpanded.value,
@@ -79,7 +83,7 @@ const MagTabGroup = defineComponent({
           {createTabGroupHeader()}
           <ElCollapseTransition>
             <ElMain class="mag-tabgroup__main" v-show={componentExpanded.value}>
-              <ElTabs  {...props} {...attrs} v-model={currentTab.value}
+              <ElTabs  {...props} {...attrs} ref={componentRef} v-model={currentTab.value}
                        class="mag-view-card-layout is-borderless-layout">
                 {useSlots(slots)}
               </ElTabs>

@@ -1,5 +1,15 @@
 <template>
-  <ElButton :loading="loadingStatus"
+  <ElLink v-if="asType === 'link'"
+          :loading="loadingStatus"
+          v-bind="mergedAttrs"
+          underline="never"
+          @click="onClickFunc"
+  >
+    <slot></slot>
+  </ElLink>
+
+  <ElButton v-else
+            :loading="loadingStatus"
             v-bind="mergedAttrs"
             @click="onClickFunc"
   >
@@ -9,18 +19,21 @@
 
 <script lang="ts">
 import {defineComponent, PropType, ref} from "vue";
-import {ElButton} from "element-plus";
+import {ElButton, ElLink} from "element-plus";
 import BasicComponent from "@/components/core/BasicComponent.ts";
 import {useMergedAttrs} from "@/composables/ComposableUseProvider.ts";
+import {MagButtonAsType} from "@/types";
 
 export default defineComponent({
   name: "MagButton",
   extends: BasicComponent,
   components: {
-    ElButton
+    ElButton,
+    ElLink
   },
   props: {
     formType: {type: Boolean, required: false, default: () => true},
+    asType: {type: String as PropType<MagButtonAsType>, required: false, default: () => "button"},
     prop: {type: String as PropType<string>, required: false, default: () => ""},
     label: {type: String, required: false, default: () => ""},
     onClick: {
@@ -31,7 +44,6 @@ export default defineComponent({
   emits: ["click"],
   setup(props, {attrs}) {
     const loadingStatus = ref(false);
-
     const mergedAttrs = useMergedAttrs(props, attrs, ['onClick', 'loading']);
 
     const onClickFunc = async (event: MouseEvent) => {

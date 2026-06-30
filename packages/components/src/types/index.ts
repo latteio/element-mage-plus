@@ -53,6 +53,7 @@ export declare interface AppTokenStorage {
 
 export type MagElmType = "primary" | "info" | "success" | "warning" | "danger";
 export type MagElmAlignType = "left" | "center" | "right";
+export type MagButtonAsType = "button" | "link" | "text";
 
 export declare interface MagButtonType {
   type?: string;

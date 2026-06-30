@@ -1,4 +1,4 @@
-import {Comment, Fragment, Slots, VNode} from 'vue';
+import {Comment, Fragment, Ref, Slots, VNode} from 'vue';
 
 export function useMergedAttrs(props: any, attrs: any, excludeKeys?: string | string[]) {
   const excludeList = Array.isArray(excludeKeys) ? excludeKeys : excludeKeys ? [excludeKeys] : [];
@@ -39,4 +39,12 @@ export function useSlots(slots: Slots) {
     }
     return true;
   });
+}
+
+export function useInvoke(componentRef: Ref, methodName: string, ...args: any[]) {
+  if (componentRef.value && typeof componentRef.value[methodName] === 'function') {
+    return componentRef.value[methodName](...args)
+  }
+  console.warn(`方法 ${methodName} 不存在`)
+  return undefined
 }

@@ -4,7 +4,6 @@ import {MagTableColumnSortType} from "@/types";
 import MagButton from "@/components/basic/MagButton.vue";
 import MagDropdown from "@/components/basic/MagDropdown.vue";
 import MagConfirmButton from "@/components/basic/MagConfirmButton.vue";
-import MagLink from "@/components/basic/MagLink.vue";
 import MagEditButton from "@/components/table/MagEditButton";
 import MagDeleteButton from "@/components/table/MagDeleteButton";
 import {useSlots} from "@/composables/ComposableUseProvider.ts";
@@ -23,7 +22,6 @@ const MagTableColumnButtons = defineComponent({
     const btnTypes: any = {
       "MagButton": MagButton,
       "MagConfirmButton": MagConfirmButton,
-      "MagLink": MagLink,
       "MagEditButton": MagEditButton,
       "MagDeleteButton": MagDeleteButton,
       "MagDropdown": MagDropdown
@@ -49,7 +47,7 @@ const MagTableColumnButtons = defineComponent({
         return <div class="mag-button-group">
           {childNodes.map((node: any) => {
                 let vNode;
-                if (node.type?.name === MagButton.name || node.type?.name === MagConfirmButton.name || node.type?.name === MagLink.name) {
+                if (node.type?.name === MagButton.name || node.type?.name === MagConfirmButton.name) {
                   let events: any = {};
                   if (node.props?.["onClick"]) {
                     events.onClick = (event: any) => node.props?.["onClick"](event, scope);
@@ -61,7 +59,6 @@ const MagTableColumnButtons = defineComponent({
                     ...node.props,
                     ...node.attrs,
                     formType: false,
-                    buttonType: true,
                     dataScope: scope,
                     ...events
                   }, {
@@ -91,7 +88,6 @@ const MagTableColumnButtons = defineComponent({
                     ...node.props,
                     ...node.attrs,
                     formType: false,
-                    buttonType: true,
                     dataScope: scope,
                     ...events
                   }, {

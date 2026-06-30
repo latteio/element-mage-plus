@@ -38,7 +38,7 @@ const MagPane = defineComponent({
 
     const createPaneHeader = () => {
       if (props.header) {
-        return <ElHeader onclick={setExpandedInternalFunc}
+        return <ElHeader onClick={setExpandedInternalFunc}
                          class={{
                            "mag-view__header": true,
                            "is-expanded": componentExpanded.value,

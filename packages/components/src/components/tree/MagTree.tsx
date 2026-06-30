@@ -3,8 +3,8 @@ import {ElCollapseTransition, ElContainer, ElHeader, ElIcon, ElMain, ElTree} fro
 import {ArrowRight} from "@element-plus/icons-vue";
 import {AxiosResponse} from "axios";
 import MagTreeBar from "@/components/tree/MagTreeBar";
-import BasicViewComponent from "@/components/core/BasicViewComponent.ts";
-import {useSlots} from "@/composables/ComposableUseProvider.ts";
+import BasicViewComponent from "@/components/core/BasicViewComponent";
+import {useInvoke, useSlots} from "@/composables/ComposableUseProvider.ts";
 import Objects from "@/utils/Objects";
 
 const MagTree = defineComponent({
@@ -17,10 +17,11 @@ const MagTree = defineComponent({
     dataLoader: {type: Function as PropType<(params: any) => Promise<AxiosResponse<any>>>, required: false, default: () => null},
     dataParams: {type: Object, required: false, default: () => null},
     autoLoad: {type: Boolean, required: false, default: () => true},
-    dataPropKey: {type: String, required: false, default: () => null},
-    checkedDataPropKey: {type: String, required: false, default: () => null}
+    dataKey: {type: String, required: false, default: () => null},
+    checkedDataKey: {type: String, required: false, default: () => null}
   },
   setup(props, {attrs, slots, expose}) {
+    const componentRef = ref();
     const componentVisible = ref(props.visible);
     const componentExpanded = ref(props.expanded);
     const loadingStatus = ref(false);
@@ -29,8 +30,8 @@ const MagTree = defineComponent({
      * 定义树内置模型变量
      */
     const treeModel = reactive({
-      data: (props.dataPropKey && props.checkedDataPropKey) ? (props.data as any)[props.dataPropKey as string] : (Objects.isArray(props.data) ? props.data : [props.data]),
-      checkedKeys: (props.dataPropKey && props.checkedDataPropKey) ? (props.data as any)[props.checkedDataPropKey as string] : [],
+      data: (props.dataKey && props.checkedDataKey) ? (props.data as any)[props.dataKey as string] : (Objects.isArray(props.data) ? props.data : [props.data]),
+      checkedKeys: (props.dataKey && props.checkedDataKey) ? (props.data as any)[props.checkedDataKey as string] : [],
       dataParams: {...props.dataParams}
     });
 
@@ -40,8 +41,8 @@ const MagTree = defineComponent({
      */
     const loadDataFunc = (data: any) => {
       if (data) {
-        treeModel.data = (props.dataPropKey && props.checkedDataPropKey) ? data[props.dataPropKey as string] : (Objects.isArray(data) ? data : [data]);
-        treeModel.checkedKeys = (props.dataPropKey && props.checkedDataPropKey) ? data[props.checkedDataPropKey as string] : []
+        treeModel.data = (props.dataKey && props.checkedDataKey) ? data[props.dataKey as string] : (Objects.isArray(data) ? data : [data]);
+        treeModel.checkedKeys = (props.dataKey && props.checkedDataKey) ? data[props.checkedDataKey as string] : []
       }
     }
 
@@ -88,7 +89,10 @@ const MagTree = defineComponent({
       },
       setExpanded: setExpandedFunc,
       load: loadDataAsyncFunc,
-      loadData: loadDataFunc
+      loadData: loadDataFunc,
+      invoke: function (methodName: string, ...args: any[]) {
+        return useInvoke(componentRef, methodName, args);
+      }
     });
 
     /**
@@ -118,7 +122,7 @@ const MagTree = defineComponent({
 
       const createTreeHeader = () => {
         if (props.header) {
-          return <ElHeader onclick={setExpandedInternalFunc}
+          return <ElHeader onClick={setExpandedInternalFunc}
                            class={{
                              "mag-view__header": true,
                              "is-expanded": componentExpanded.value,
@@ -142,9 +146,10 @@ const MagTree = defineComponent({
       const createTreeBody = () => {
         if (null != treeBar) {
           return <ElTree {...props} {...attrs}
+                         ref={componentRef}
                          data={treeModel.data}
-                         show-checkbox={props.checkedDataPropKey != null}
-                         default-checked-keys={props.checkedDataPropKey != null ? treeModel.checkedKeys : []}
+                         show-checkbox={props.checkedDataKey != null}
+                         default-checked-keys={props.checkedDataKey != null ? treeModel.checkedKeys : []}
                          v-slots={{
                            default: (data: any) =>
                                h(MagTreeBar, {treeProps: {...attrs?.props as any}, dataScope: {...data}},
@@ -153,9 +158,10 @@ const MagTree = defineComponent({
           </ElTree>
         } else {
           return <ElTree {...props} {...attrs}
+                         ref={componentRef}
                          data={treeModel.data}
-                         show-checkbox={props.checkedDataPropKey != null}
-                         default-checked-keys={props.checkedDataPropKey != null ? treeModel.checkedKeys : []}>
+                         show-checkbox={props.checkedDataKey != null}
+                         default-checked-keys={props.checkedDataKey != null ? treeModel.checkedKeys : []}>
           </ElTree>
         }
       }

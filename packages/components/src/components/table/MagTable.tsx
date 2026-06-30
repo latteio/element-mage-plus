@@ -8,7 +8,7 @@ import MagTableBar from "@/components/table/MagTableBar";
 import MagTableColumn from "@/components/table/MagTableColumn";
 import MagTablePagination from "@/components/table/MagTablePagination";
 import BasicViewComponent from "@/components/core/BasicViewComponent.ts";
-import {useSlots} from "@/composables/ComposableUseProvider.ts";
+import {useInvoke, useSlots} from "@/composables/ComposableUseProvider.ts";
 import Objects from "@/utils/Objects";
 
 const MagTable = defineComponent({
@@ -40,6 +40,7 @@ const MagTable = defineComponent({
   },
   emits: ["data-filter"],
   setup(props, {attrs, slots, emit, expose}) {
+    const componentRef = ref();
     const componentVisible = ref(props.visible);
     const componentExpanded = ref(props.expanded);
     const loadingStatus = ref(false);
@@ -368,7 +369,10 @@ const MagTable = defineComponent({
       cancelEdit: () => {
         onCancelEditRowDataFunc(null, true)
       },
-      getModifiedRows: getModifiedRowDataFunc
+      getModifiedRows: getModifiedRowDataFunc,
+      invoke: function (methodName: string, ...args: any[]) {
+        return useInvoke(componentRef, methodName, args);
+      }
     });
 
     /**
@@ -394,7 +398,7 @@ const MagTable = defineComponent({
      */
     const createTableHeader = () => {
       if (props.header) {
-        return <ElHeader onclick={setExpandedInternalFunc}
+        return <ElHeader onClick={setExpandedInternalFunc}
                          class={{
                            "mag-view__header": true,
                            "is-expanded": componentExpanded.value,
@@ -531,6 +535,7 @@ const MagTable = defineComponent({
             {createTableTopBars(tableBar)}
             <ElTable {...props}
                      {...attrs}
+                     ref={componentRef}
                      data={tableModel.rowData}
                      class={{
                        "mag-table__table": true,

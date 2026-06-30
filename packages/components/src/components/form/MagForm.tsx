@@ -5,7 +5,7 @@ import BasicViewComponent from "@/components/core/BasicViewComponent.ts";
 import MagFormBar from "@/components/form/MagFormBar";
 import MagFlexComponent from "@/components/basic/MagFlexComponent.vue";
 import MagButton from "@/components/basic/MagButton.vue";
-import {useSlots} from "@/composables/ComposableUseProvider.ts";
+import {useInvoke, useSlots} from "@/composables/ComposableUseProvider.ts";
 import Objects from "@/utils/Objects";
 
 const MagForm = defineComponent({
@@ -23,9 +23,9 @@ const MagForm = defineComponent({
   },
   emits: ["query", "reset"],
   setup(props, {attrs, slots, emit, expose}) {
+    const componentRef = ref();
     const componentVisible = ref(props.visible);
     const componentExpanded = ref(props.expanded);
-    const formRef = ref();
     const formModelCached = reactive({...props.model});
     const minHeight = ref(2 * 50);
 
@@ -35,7 +35,7 @@ const MagForm = defineComponent({
      * @param failureCallBack 失败回调函数
      */
     const validateFormFunc = (successCallBack: Function, failureCallBack: Function) => {
-      formRef.value.validate((isValid: boolean) => {
+      componentRef.value.validate((isValid: boolean) => {
         if (isValid) {
           successCallBack && successCallBack(props.model || {});
         } else {
@@ -48,7 +48,7 @@ const MagForm = defineComponent({
      * 定义重置表单字段: 清空验证信息
      */
     const resetFormFunc = () => {
-      formRef.value.resetFields();
+      componentRef.value.resetFields();
       Objects.setObjectValues(props.model, formModelCached, true);
     }
 
@@ -94,7 +94,10 @@ const MagForm = defineComponent({
       validateForm: validateFormFunc,
       resetForm: resetFormFunc,
       updateFormData: updateFormDataFunc,
-      getFormData: getFormDataFunc
+      getFormData: getFormDataFunc,
+      invoke: function (methodName: string, ...args: any[]) {
+        return useInvoke(componentRef, methodName, args);
+      }
     });
 
     /**
@@ -108,7 +111,7 @@ const MagForm = defineComponent({
      * 定义 重置 按钮事件
      */
     const onClickResetBtnFunc = (event: any) => {
-      formRef.value.resetFields();
+      componentRef.value.resetFields();
       Objects.setObjectValues(props.model, formModelCached, true);
       emit("reset", event, props.model);
     }
@@ -118,13 +121,12 @@ const MagForm = defineComponent({
      */
     const createFormHeader = () => {
       if (props.header) {
-        return <ElHeader
-            onclick={setExpandedInternalFunc}
-            class={{
-              "mag-view__header": true,
-              "is-expanded": componentExpanded.value,
-              "is-collapsed": !componentExpanded.value,
-            }}>
+        return <ElHeader onClick={setExpandedInternalFunc}
+                         class={{
+                           "mag-view__header": true,
+                           "is-expanded": componentExpanded.value,
+                           "is-collapsed": !componentExpanded.value,
+                         }}>
           <div class="mag-view__header-text">{props.header}</div>
           <div class="mag-view__header-icon">
             {
@@ -297,7 +299,7 @@ const MagForm = defineComponent({
         {createFormHeader()}
         <ElCollapseTransition>
           <ElMain class="mag-form__main" style={`height: ${minHeight}px;`} v-show={componentExpanded.value}>
-            <ElForm {...props} {...attrs} ref={formRef}>
+            <ElForm {...props} {...attrs} ref={componentRef}>
               {createRows()}
             </ElForm>
           </ElMain>
